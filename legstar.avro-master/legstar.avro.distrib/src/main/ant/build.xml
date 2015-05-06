@@ -1,0 +1,35 @@
+<project name="cob2avro-sample" default="generate" basedir=".">
+
+    <!-- Set LEGSTAR_AVRO_HOME to use this ant script from another location  -->
+    <!-- Point cobdir to a folder containing COBOL copybooks                 -->
+    <!-- Point gendir where you want the avro artifacts to be generated      -->
+
+    <property environment="env"/>
+    <property name="env.LEGSTAR_AVRO_HOME" value="."/>
+    <property name="legstar.avro.home" location="${env.LEGSTAR_AVRO_HOME}"/>
+    <property name="cobdir" location="${legstar.avro.home}/samples/cobol"/>
+    <property name="gendir" location="target/generated-sources"/>
+    <property name="packageprefix" value="legstar.samples"/>
+    <property name="config" location="${legstar.avro.home}/samples/conf/cob2xsd.properties"/>
+    <property name="logconfig" location="${legstar.avro.home}/samples/conf/log4j.properties"/>
+
+    <!-- Classpath for generation -->
+    <path id="project.class.path">
+        <fileset dir="${legstar.avro.home}/lib">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+    <property name="project.classpath" refid="project.class.path"/>
+
+    <target name="init">
+        <mkdir dir="${gendir}"/>
+    </target>
+
+    <target name="generate" depends="init">
+        <java classname="com.legstar.avro.generator.Cob2AvroGeneratorMain" fork="true" failonerror="true">
+            <arg line="-i ${cobdir} -o ${gendir} -p ${packageprefix}"/>
+            <classpath path="${project.classpath}"/>
+        </java>
+    </target>
+
+</project>
